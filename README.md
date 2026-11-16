@@ -1,3 +1,47 @@
+# DOCUMENTAÇÃO ATIVIDADE 2
+
+## Estrutura do projeto (por responsabilidade)
+(árvore de pastas + uma linha por pacote)
+
+## Execução da API
+py -m uv run uvicorn app.main:app --reload
+
+## Tutorial: configurando o Nginx como Proxy Reverso
+1. O que é e por que usar (porteiro da API: ocultação, segurança, desempenho)
+2. Instalação no Windows (download, extração em C:\nginx)
+3. Configuração (conteúdo do nginx/nginx.conf, explicando proxy_pass,
+   proxy_set_header e limit_req)
+4. Como iniciar, validar (-t), recarregar e parar
+5. Como testar (/docs em :8080, cabeçalho Server: nginx, teste de 429)
+6. Problemas comuns (porta ocupada → trocar o listen; conf não carrega →
+   rodar nginx -t)
+7. Referências (os links do enunciado)
+
+# ENUNCIADO DA ATIVIDADE 2 (16/11/26):
+
+Vamos dar continuidade ao desenvolvimento da aula passada. Nessa atividade, vocês deverão segmentar o código em pacotes, divididos por responsabilidade.
+
+Segunda etapa
+O Nginx (pronuncia-se Engine-X) é um servidor web de código aberto de altíssimo desempenho, amplamente utilizado na arquitetura de sistemas distribuídos como Proxy Reverso, balanceador de carga (load balancer) e cache HTTP.
+
+No contexto da nossa API em Python (FastAPI + Uvicorn), o Nginx atua como um "porteiro" ou camada de borda posicionada à frente da aplicação:
+
+Ocultação e Isolamento: O cliente externo (navegador ou aplicativo mobile) não acessa diretamente a porta interna do Uvicorn (127.0.0.1:8000). Ele conversa apenas com o Nginx (porta 80 ou 8080).
+Segurança e Controle de Acesso: Permite barrar tráfego malicioso, aplicar autenticação básica, limitar taxas de requisições (Rate Limiting) e gerenciar certificados digitais (SSL/TLS) antes mesmo que a requisição consuma recursos do Python.
+Desempenho: O Nginx gerencia milhares de conexões simultâneas de forma assíncrona e orientada a eventos, repassando ao Uvicorn apenas as requisições dinâmicas já filtradas.
+
+Abaixo, estão algumas referências recomendadas:
+Documentação Oficial do Nginx (Reverse Proxy): NGINX Reverse Proxy Guide
+Documentação Oficial do FastAPI (Deployment): Behind a Proxy & Server Workers
+Livro de Arquitetura: Sistemas Distribuídos: Princípios e Paradigmas — Andrew S. Tanenbaum e Maarten van Steen (Capítulos sobre Arquitetura de Software, Camadas de Middleware e Servidores Proxy).
+Segurança e Rate Limiting no Nginx: NGINX Rate Limiting Documentation
+
+O objetivo é gerar um pequeno tutorial que permita configurar o NGINX no projeto desenvolvido na última aula, a implementação também deve ser realizada. Essa atividade pode ser realizada em equipes, de até três pessoas.
+Criem uma réplica do repositório, ou, uma nova branch, e, nele, façam a configuração. O mini tutorial deve estar no readme do repositório e, apenas um estudante deve realizar o envio no Ulife, onde, será inserido além do link, o nome de todos os componentes.
+
+
+# ENUNCIADO DA ATIVIDADE 1 (09/11/26):
+
 # Template de API RESTful (FastAPI + SQLite) - Monolito (Projeto A3)
 
 > 💡 **AVISO IMPORTANTE:** Este repositório contém a estrutura base desenvolvida para o **Projeto A3** em formato **monolítico**. Todo o ciclo de vida da aplicação — conexão com o banco, estruturação de dados e roteamento — está concentrado em um único arquivo (`main.py`). Ao final deste documento, há um guia prático de como evoluir esta base para o **Projeto A4**, adotando uma arquitetura em múltiplas camadas.
