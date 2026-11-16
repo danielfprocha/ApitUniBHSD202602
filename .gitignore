@@ -1,0 +1,4 @@
+.venv/
+banco_a3.db
+__pycache__/
+.idea/

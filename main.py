@@ -1,6 +1,7 @@
-import sqlite3
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+
+from database import get_db_connection, criar_tabelas
+from models import RegistroBase, RegistroResponse
 
 app = FastAPI(
     title="API de Gerenciamento - Projeto A3",
@@ -9,47 +10,14 @@ app = FastAPI(
 )
 
 
-# ==========================================
-# 1. CAMADA DE BANCO DE DADOS (SQLite)
-# ==========================================
-def get_db_connection():
-    # Cria o arquivo banco_a3.db na mesma pasta do projeto
-    conn = sqlite3.connect("banco_a3.db")
-    conn.row_factory = sqlite3.Row  # Permite acessar colunas por nome
-    return conn
-
-
 # Cria a tabela automaticamente ao iniciar a API
 @app.on_event("startup")
 def startup_event():
-    conn = get_db_connection()
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS registros (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            titulo TEXT NOT NULL,
-            descricao TEXT,
-            ativo BOOLEAN DEFAULT TRUE
-        )
-    ''')
-    conn.commit()
-    conn.close()
+    criar_tabelas()
 
 
 # ==========================================
-# 2. CAMADA DE MODELOS (Pydantic)
-# ==========================================
-class RegistroBase(BaseModel):
-    titulo: str
-    descricao: str | None = None
-    ativo: bool = True
-
-
-class RegistroResponse(RegistroBase):
-    id: int
-
-
-# ==========================================
-# 3. CAMADA DE ROTAS (Endpoints HTTP)
+# ROTAS (Endpoints HTTP)
 # ==========================================
 
 @app.post("/registros", response_model=RegistroResponse, status_code=201)
